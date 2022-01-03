@@ -33,7 +33,7 @@
         This is a directory that contains files to be serviced on the network as well as files from predecessor nodes that are leaving the network marked with their pid as the directory name for the backup files.
 
 ### Deployment Procedure:
-####For this project, Kotlin programming language was used, Object Oriented Programming language based on Java, to implement the node.
+#### For this project, Kotlin programming language was used, Object Oriented Programming language based on Java, to implement the node.
     The deployment environment must have Java JDK and any Kotlin programming language compiler like Intellij installed.
     The node is started by running the Main.kt file to start the peer after which a menu option will be availed to them by the node to carry out the various operations.
 
