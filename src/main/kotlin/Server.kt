@@ -76,13 +76,48 @@ private class FileServerThread(private val socket : Socket, private val myNode :
                 request.startsWith("HELLO") -> {
 //                    get the hello data
                     val data = request.split(" ")
-                    val fromId =  data[1].toInt()
-                    val fromAddress = data[2]
+                    var fromId =  data[1].toInt()
+                    val fromPid = data[2]
+                    val fromAddress = data[3]
 
 //                    don't handle requests from yourself
-                    if(fromId != myNode.id) {
+                    if(fromPid != myNode.pid) {
+//                        determine attempted connection position
+                        when{
+                            fromId >= myNode.successor_id -> {
+                                response = client.send("HELLO $fromId $fromPid $fromAddress",myNode.successor_address,myNode.successor_port)
+                            }
+                            fromId <= myNode.predecessor_id -> {
+                                response = client.send("HELLO $fromId $fromPid $fromAddress",myNode.predecessor_address,myNode.predecessor_port)
+                            }
+                            fromId > myNode.predecessor_id && fromId < myNode.id -> {
+                                client.send("UPDATE SUCCESSOR $fromId $fromPid $fromAddress",myNode.predecessor_address,myNode.predecessor_port)
+                                response = "UPDATE ${myNode.id} ${myNode.ipAddress} 33456 : ${myNode.predecessor_id} ${myNode.predecessor_address} ${myNode.predecessor_port}"
+                            }
+                            fromId < myNode.successor_id && fromId > myNode.id -> {
+                                client.send("UPDATE PREDECESSOR $fromId $fromPid $fromAddress",myNode.successor_address,myNode.successor_port)
+                            }
+                            else -> {
+                                //generate number between predecessor and successor but not me
+                                while (true) {
+                                    fromId = IntRange(myNode.predecessor_id,myNode.successor_id -1).random()
+                                    if(fromId != myNode.id) break
+                                }
+                                when {
+                                    fromId < myNode.id -> {
+                                        client.send("UPDATE SUCCESSOR $fromId $fromPid $fromAddress",myNode.predecessor_address,myNode.predecessor_port)
+                                    }
+                                    fromId > myNode.id -> {
+                                        client.send("UPDATE PREDECESSOR $fromId $fromPid $fromAddress",myNode.successor_address,myNode.successor_port)
+                                    }
+                                }
 
+                            }
+
+                        }
                     }else {
+//                        this is a round token close connection
+                        response = "THIS IS A PING-BACK"
 
                     }
                 }
