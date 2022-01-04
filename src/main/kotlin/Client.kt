@@ -35,9 +35,6 @@ class Client {
         }
     }
 
-    fun sendFile(message : String, address : String, port : Int) {
-
-    }
     fun getRtt() : Float {
         return 0.0F
     }
