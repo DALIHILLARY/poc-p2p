@@ -4,10 +4,12 @@ import java.net.InetAddress
 import java.net.ServerSocket
 import java.net.Socket
 import kotlin.concurrent.thread
+
 import kotlin.system.exitProcess
 
 class Server(private val port : Int, private val filePort : Int, var myNode : Node, private val client : Client) {
     private var serverSocket : ServerSocket
+
     private var serverFileSocket : ServerSocket
     val fingerTable = hashMapOf<Int,List<String>>()
     init {

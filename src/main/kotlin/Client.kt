@@ -3,8 +3,11 @@ import java.net.Socket
 
 class Client {
     private lateinit var outputStream : OutputStream
+
     private lateinit var outputStreamWriter : OutputStreamWriter
+
     private lateinit var inputStream : InputStream
+
     private lateinit var inputStreamReader : InputStreamReader
 
     fun send(message : String, address : String, port : Int) : String{
@@ -19,8 +22,11 @@ class Client {
 
             //wait for response from other node
             inputStream = socket.getInputStream()
+
             inputStreamReader = InputStreamReader(inputStream)
+
             val stringBuffer = StringBuilder()
+
             while(true)
             {
                 val x = inputStreamReader.read()

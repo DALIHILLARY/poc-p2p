@@ -1,5 +1,4 @@
 import com.google.gson.Gson
-import java.awt.SystemColor.text
 import java.io.File
 import java.lang.Thread.sleep
 import java.net.InetAddress
@@ -19,7 +18,7 @@ fun main(args: Array<String>) {
         File("files").mkdir()
     }
     if(File("device.txt").exists()) {
-         val data = File("device.txt").readLines()
+        val data = File("device.txt").readLines()
         id = data[0].toInt()
         uuid = data[1]
     }else {
