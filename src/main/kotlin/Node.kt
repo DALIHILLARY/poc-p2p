@@ -10,4 +10,4 @@ data class Node (
     val predecessor_id : Int = 0,
     val predecessor_address : String = "",
     val predecessor_port : Int = 0
-    )
+)
