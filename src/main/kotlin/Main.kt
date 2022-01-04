@@ -1,3 +1,4 @@
+import com.google.gson.Gson
 import java.io.File
 import java.lang.Thread.sleep
 import java.net.InetAddress
@@ -17,7 +18,7 @@ fun main(args: Array<String>) {
         File("files").mkdir()
     }
     if(File("device.txt").exists()) {
-         val data = File("device.txt").readLines()
+        val data = File("device.txt").readLines()
         id = data[0].toInt()
         uuid = data[1]
     }else {
@@ -47,13 +48,37 @@ fun main(args: Array<String>) {
                 client.send("LEAVING ${myNode.successor_id} ${myNode.successor_address} ${myNode.successor_port}#", myNode.predecessor_address,myNode.predecessor_port)
 
                 //send files to the successor
-                client.sendFile("LEAVING ${myNode.successor_id} ${myNode.successor_address} ${myNode.successor_port}#", myNode.predecessor_address,myNode.predecessor_port)
+                val files = File("files").listFiles()
+                files?.forEach {
+                    if(it.isDirectory) {
+                        it.listFiles()?.forEach { file ->
+                            val dFile = DFile(
+                                fileName = file.name,
+                                data = file.readBytes(),
+                                nodePid = it.name,
+                                type = "LEAVING"
+                            )
+                            client.send("${Gson().toJson(dFile)}#", myNode.successor_address,33457)
+                        }
+                    }else{
+                        val dFile = DFile(
+                            fileName = it.name,
+                            data = it.readBytes(),
+                            nodePid = myNode.pid,
+                            type = "LEAVING"
+                        )
+                        client.send("${Gson().toJson(dFile)}#", myNode.successor_address,33457)
+
+                    }
+                }
 
             }
             "3" -> {
                 print("Enter file Name: ")
                 val fileName = readLine().toString()
-                client.send("SEARCH $fileName#",myNode.successor_address,myNode.successor_port)
+//                client.send("SEARCH $fileName#",myNode.successor_address,myNode.successor_port)
+                client.send("SEARCH $fileName ${myNode.ipAddress}#","127.0.1.1",33456)
+
             }
             "4" -> {
                 println("FINGER TABLE")
