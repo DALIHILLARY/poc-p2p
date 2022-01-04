@@ -4,10 +4,12 @@ import java.net.InetAddress
 import java.net.ServerSocket
 import java.net.Socket
 import kotlin.concurrent.thread
+
 import kotlin.system.exitProcess
 
 class Server(private val port : Int, private val filePort : Int, private var myNode : Node, private val client : Client) {
     private var serverSocket : ServerSocket
+
     private var serverFileSocket : ServerSocket
     init {
         try{
@@ -137,6 +139,7 @@ class Server(private val port : Int, private val filePort : Int, private var myN
                                 val fileName = data[1]
                                 val fileAddress = data[2]
                                 val files = File("files").listFiles()
+
                                 files?.let {
                                     val filesx = it.filter { it1 -> it1.isFile }.map { it2 -> it2.name }
                                     if(fileName in filesx) {
